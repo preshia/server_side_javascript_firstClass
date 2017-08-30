@@ -1,0 +1,888 @@
+1강 - 수업소개
+Node.js = google V8 + event-driven + non-blocking IO
+language -> JavaScript	 ex)한국어
+RunTime -> WebBrowser, Nodejs 	ex)병원, 법원, 카페
+alert("dd")는 javascript의 '언어'이지만, 웹페이지에서 경고창을 띄우는 용도이므로 어느 런타임에서 써야하는지 인지해야한다.
+nodejs는 V8을 이용하기 때문에 속도가 빠르다.
+javascript로 클라와 서버 양쪽 모두를 만들 수 있다.
+
+2강 - 설치
+nodejs.org/en/
+내컴퓨터 - 속성을 보면 몇비트 컴퓨터인지 알 수 있다.
+리눅스 운영체제는 홈페이지-downloads-Installing Node.js via package manager 에서 리눅스 종류별로 다운받는법이 나온다.
+실행방법 - 윈도우키 + R -> cmd 실행
+node --version 이라고 치면 깔려있는 버전이 나옴.
+
+3강 - 실행
+홈디렉토리(나같은 경우는 YOON) - dev 폴더 생성 - js 폴더 생성 - server_side_javascript 폴더 생성
+텍스트 에디터 프로그램 하나 다운받아서 그 디렉토리에 hello.js파일 하나 만들어준다.
+내용물은  
+console.log("hi");
+console.log(1+10);
+cmd에서 그 폴더를 찾아간다. 
+dir/w를 치면 그 폴더에 있는 파일 및 폴더 목록이 나온다.
+하위 폴더로 가려면 cd 폴더이름 친다.
+파일 실행은 
+node hello.js
+
+4강 - 간단한 웹앱 만들기 실행
+node.js 사이트의 about에 있는 코드를 복사한다.
+
+const http = require('http');
+
+const hostname = '127.0.0.1';
+const port = 3000;
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello World\n');
+});
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+
+위의 것은 웹서버 코드이다.
+cmd에서 node webserver.js를 치면 실행이 된다.
+빠져나올 땐 Ctrl + c 입력.
+그 다음엔 인터넷 브라우저에서 http://127.0.0.1:3000 에 들어가보면 hello world가 뜬다.
+
+5강 - 인터넷의 동작 방법
+IP를 통해 서버컴퓨터에 접속
+IP대신 주소를 통해 접속 가능
+서버에 웹서버, 데이터베이스, 게임서버 등 많은 것이 깔려있을 수 있기 때문에 어디에 어떻게 접근할지가 중요.
+컴퓨터에는 65536개의 포트(항구)가 있다. 그중 80번 포트에 웹서버를 연결.
+80번 포트를 웹서버가 리스닝 하고 있다.
+a닷컴 사이트의 http://a.com:80이라고 친다면 웹서버에 접근 가능.
+http 규약에 의해 80은 생략 가능.
+https에서는 :80을 붙이면 아예 오류가 남.
+지난 강의에서는 3000번 포트에 서버를 연결했으므로 3000포트에서 리스닝을 하고 있는 상태임.
+
+7강 - 모듈 기초
+홈페이지에 Docs에 들어가면 설명서가 있다.
+코드분석
+const http = require('http'); 
+-> http라는 부품(모듈)을 가져온다. 모듈을 쓸땐 require메소드를 사용한다. const때문에 상수가 되어 한번 대입하면 바꿀 수 없다.
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello World\n');
+});
+-> http.createServer로 서버객체를 생성한다. http.server객체를 리턴한다. 내부에는 서버에서 작동할 동작들을 만든다.
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+-> 리스너를 설정한다.
+
+밑에는 다른 코드.
+
+var o = require('os');
+console.log(o.platform());
+-> os라는 모듈을 가져와서 플랫폼이라는 메소드를 실행하면, 윈도우의 경우에는 win32라는 문구가 뜬다. 자신의 플랫폼을 알려준다.
+이런식으로 모듈을 사용한다.
+
+8강- NPM 소개
+타인의 모듈을 사용하기
+Node Package Manager - Node계의 앱스토어
+모듈이나 독립적인 앱을 설치, 삭제, 업그레이드, 의존성관리
+www.npmjs.com
+
+9강 - NPM 독립적인 앱 설치
+uglify-js를 설치해본다.
+설치방법은 위의 홈페이지에서 검색하면 나옴.
+npm install uglify-js -g
+-g를 붙이면 컴퓨터 내에서 전역적으로 사용.
+안붙이면 패키지 내에서 부품으로 사용.
+설치후 uglifyjs --help 치면 설명이 나옴.
+pretty.js파일을 만들고, 그 폴더에서
+uglifyjs pretty.js 을 하면 코드 내의 쓸데없는 띄어쓰기, 쓸데없는 줄바꿈을 없애고 한줄짜리 코드로 바꿔줌. 네트워크로 코드를 전송할 땐 속도가 미묘하게 빨라짐.
+뒤에 -m을 붙이면 매개변수나 지역변수의 이름을 한글자짜리로 바꿔줌.
+짧아진 코드를 저장하려면
+uglifyjs pretty.js -o pretty.min.js -m 하면 됨. min은 minify의 약자로 관습적인 의미임. 사실 파일 이름은 아무거나 해도 상관 없음.
+
+10강 - NPM으로 모듈 설치
+underscore 설치하기. 유명한 함수들 모음 모듈
+npm install underscore
+하기 전에 내가 원하는 폴더를 패키지(프로젝트)의 저장소로 삼아야 함
+내가 원하는 폴더에서 npm init 해야함
+dscription에서는 Server Side javascript tutorials라고 대충 써준다.
+entry point는 이 패키지를 구동시키는 자바스크립트 파일을 지정해준다.
+test command는 굳이 안써도 됨.
+나머지는 그냥 엔터누르고 yes 누르면 완성.
+폴더 안에 지금까지 입력한 정보가 package.json 파일로 생성되어있다.
+폴더에 가서 봐도 되고,
+이제 underscore를 설치하면 폴더 내에 여러가지가 설치되어있음.
+설치하면 cmd상에 extraneous라고 뜰텐데, 아직 완전히 포함되지 않은 상태를 뜻함.
+npm install underscore --save라고 플래그(옵션)을 쓰면 package.json 안에 dependencies 항목이 추가됨.
+이제 package.json 파일만 있으면 언제든 underscore를 패키지(프로젝트)에 포함시킬 수 있음.
+내 패키지에 포함할 필요 없고 잠깐 쓰는 모듈이나 패키지는 --save를 안붙이고, 
+꼭 필요하고 계속 사용할 모듈이나 패키지는 --save를 써서 프로젝트를 다시 파더라도 사용할 수 있도록 한다.
+
+11강 - 모듈 사용법
+underscore.js를 만든다.
+간단하게 underscore의 first와 last 함수를 써본다.
+var _ = require('underscore');
+var arr = [3,6,9,1,12];
+console.log(arr[0]);
+console.log(_.first(arr));
+console.log(arr[arr.length-1]);
+console.log(_.last(arr));
+
+출력값 
+3
+3
+12
+12
+
+12강 - 콜백함수
+인자로 전달되는 함수.
+프로그래머가 호출하는 것이 아닌, 함수에 의해 호출당할 함수.
+cmd에서 node만 치면 자바스크립트 함수를 실행할 수 있음.
+a=[3,1,2]; a.sort(); console.log(a);를 쳐보자.
+인터넷에 array.sort()함수를 검색해보면 매개변수에 함수를 넣을 수도 있다.
+그 함수의 틀만 지켜주면 함수를 마음대로 정의할 수 있다.
+그 함수의 리턴값은 0, 음수, 양수중 하나여야 한다.
+sort()함수는 매개변수로 함수를 받으면 어떻게 정렬해야할지 고민할 때마다 함수 b를 실행해야할 의무가 있다.
+a=[3,1,2]; function b(v1, v2){return v2-v1}; a.sort(b); console.log(a);
+출력값 : 3,2,1
+a=[3,5,1,4,2]; function b(v1, v2){console.log(v1, v2); return v1-v2}; a.sort(b); console.log(a);
+를 쳐보자. 
+인자로 아예 함수를 만들수도 있다. 이것이 바로 익명함수.
+a=[3,1,2]; a.sort(function(v1, v2){return v2-v1}); console.log(a);
+sort()함수는 아마 이런 구조일 것이다.
+function sort(callback){callback();};
+이것을 지금 cmd에 치고 또 호출을 하면 에러가 날 것이다. 매개변수를 안 넣어줬기 때문.
+호출할 때는
+sort(function(){console.log('hello callback')});이라고 콜백함수라도 넣어줘야 한다.
+
+13강 - 동기, 비동기
+synchronous
+asynchronous
+기기와 기기 사이의 데이터를 똑같이 맞춘다 - 동기화한다
+빨래, 설거지, 청소를 동기적으로 처리한다면, 빨래->설거지->청소를 하면서 일을 끝낸다. 총 3시간.
+이것을 비동기적으로 처리한다면, 빨래업체에 전화해서 해달라고 하고 끝나면 알려달라고 함.
+설거지와 청소도 마찬가지로 한다면, 전화시간 3분이면 다 끝남. 대신 뭐가 먼저 끝날지는 모름.
+10000명에게 이메일을 보낼때, 동기적으로 하면 한명 한명 일일이 보내야함.
+비동기적으로 보낸다면, 발행을 누르면 이메일을 보내는 별도의 시스템에게 10000명에게 보내도록 지시함.
+
+14강 - 동기, 비동기 활용
+nodejs.org - docs - file system - fs.readfilesync 함수를 써볼거임.
+파일 시스템에는 같은 함수가 sync가 붙은 것이 있고 안 붙은 것이 있다.
+붙어있으면 동기방식, 안 붙어있으면 비동기방식.
+보통은 비동기로 하고, 원한다면 sync가 붙어있는 동기방식으로 할 수 있는데 하수라면 추천 안한다고 함.
+일단 폴더에 data.txt 파일을 만들고 내용물을 hello sync and async라고 함.
+그 다음 sync_async.js 파일을 만들고, 내용물을 아래와 같이 한다.
+var fs = require('fs');
+
+console.log(1);
+var data = fs.readFileSync('data.txt', {encoding:'utf8'});
+console.log(data);
+
+console.log(2);
+fs.readFile('data.txt', {encoding:'utf8'}, function(err, data){console.log(3);console.log(data);});
+console.log(4);
+라고 함.
+위는 동기방식, 아래는 비동기방식.
+위는 readFileSync함수가 다 끝날때까지 아무것도 안하다가 data를 리턴함.
+아래는 2가 찍히고 4가 찍힌 후 3이 찍힘.
+readFile은 비동기라서 자신이 실행되고나서 data.txt파일을 불러오는 동안 곧바로 다음 줄이 실행되고, 그걸 다 불러오면 내부의 익명함수를 실행하기 때문.
+nodejs는 싱글스레드이기 때문에 비동기를 써야할 때가 많음.
+
+15강 - express
+webserver2.js 파일을 만들어서 nodejs.org 홈페이지의 about에 있는 코드를 붙여넣는다.
+이렇게 웹서버를 만들수도 있지만, 이미 있는 프레임워크를 통해 만들수도 있다.
+expressjs.com 라는 유명한 프레임워크를 사용해보자.
+
+16강 - express 설치
+처음부터 한다고 가정하고, cmd에서 cd .. 하여 상위폴더로 간 뒤, mkdir temp라고 해서 폴더를 하나 만들어준다.(그냥 윈도우탐색기에서 js폴더 밑에 temp폴더를 만들어도 됨)
+npm init 하여 npm의 루트 폴더로 만들어준다. init을 하면 package.json파일이 만들어진다.
+그리고 마지막으로 npm install --save express 하여 설치한다. --save 때문에 package.json 파일에 express의 버전정보가 추가된다.
+우리는 server_side_javascript 폴더에 할 것이므로 init 할 필요 없이 그냥 npm install --save express 하자.
+
+17강 - express를 이용한 간단한 웹앱 만들기
+app.js파일을 만든다.관습적으로 app.js를 엔트리 애플리케이션, 메인파일, 메인 애플리케이션이라고 부른다. c로 따지면 main함수 같은거 같다.
+expressjs.com 홈페이지 - 시작하기 - hello world를 테스트해본다.
+var express = require('express');//express모듈을 불러온다. 리턴값은 express() 함수이다.
+var app = express(); //express()함수의 리턴값은 app 객체이다.
+
+app.get('/', function (req, res) {
+  res.send('Hello World!');
+});
+
+app.get('/login', function(req, res){
+  res.send('<h1>login please</h1>');
+});
+
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
+});//포트 3000번 설정. 콜백함수 이용해 비동기적으로 반응을 정한다.
+
+
+일단
+
+var express = require('express');
+var app = express();
+
+app.listen(3000, function(){
+console.log('connected 3000 port');	
+});
+만 치고 cmd에 node app.js 치면 connected 3000 port라는 문구가 뜬다.
+또한 웹브라우저에 localhost:3000을 치면 들어가지긴 하는데 cannot get이라는 문구가 뜬다.
+웹서버는 만들어졌지만, 클라이언트에서 서버로 들어왔을때 반응해주는 get 함수를 안만들어서 그렇다.
+
+보통 url을 통해 들어오는건 get방식, 아닌건 host 방식이라고 한다.
+get방식으로 접속한 사람들 중 홈페이지에 들어온 사람들을 위해 '/'을 넣어준다.
+get같은 함수를 라우터라고 하고, 라우팅은 길을 찾는다는 뜻이다.
+어떤 요청이 들어왔을 때 그 요청의 길을 찾아주는것이 get이라는 라우터가 하는 일이다. 
+라우터라는 개념은 웹앱을 만들때 중요한 개념이다.
+
+18강 - 연결성
+
+
+19강 - express, 정적 파일을 서비스 하는 법
+프로그래밍적으로 만들어진것은 동적. 사람이 한 번 만든 파일은 정적이라고 표현함.
+public 폴더를 만들고 그 안에 hello.png 그림파일을 넣는다.
+app.js 파일에 
+app.use(express.static('public'));
+한 줄을 아무데나 추가한다.
+그 다음 cmd에서 node app.js를 쳐서 실행한 다음
+웹브라우저에서 localhost:3000/hello.png 하면 그림이 뜬다.
+또 hello.txt 파일을 public 폴더안에 만들어서 똑같이 실행해도 된다.
+혹은 특정 홈페이지에 들어갔을 때 정적파일을 실행할 수도 있는데,
+app.get('/image', function(req, res){
+	res.send('hello image, <img src="/hello.png">');
+});
+라고 추가하고서 cmd에서 node app.js 라고 쳐서 실행한 뒤,
+웹브라우저에서 localhost:3000/image 페이지에 들어가면 글씨와 그림이 뜬다.
+
+20강 - express, 웹페이지를 표현하는 방법
+public 폴더 안에 html 파일을 넣는것이다. 그럼
+app.use(express.static('public'));
+때문에 html파일을 읽을 수 있다.
+public폴더 안에 static.html 파일을 만들고 내용물을 아래와 같이 써준다.
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="utf-8">
+			<title></title>
+		</head>
+		<body>
+			hello, static
+		</body>
+	</html>
+
+그다음에 저번 강의에서 만든 app.js를 키고
+웹브라우저에서 localhost:3000/static.html을 하면 웹페이지가 뜬다.
+이상태에서 html 파일을 수정하고 다시 웹브라우저로 들어가면 html 파일이 수정된걸 확인할 수 있다.
+즉, 정적인 파일은 굳이 서버를 닫지 않아도 수정할 수 있다.
+이번엔 app.js에서 동적으로 html 문구를 실행시켜보자.
+app.js에 아래와 같은 라우터를 하나 추가한다.
+app.get('/dynamic', function(req, res){
+	var output = 
+	`
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="utf-8">
+			<title></title>
+		</head>
+		<body>
+			hello, static
+		</body>
+	</html>
+	`;
+
+	res.send(output);
+});
+전에는 저런식으로 줄바꿈이 되어있는 텍스트는 에러가 나서, javascript에서는 줄의 끝마다 역슬래쉬를 붙여줘야 했다.
+그런데 이제는 포맷티드 텍스트라고 해서, 물결표시와 같이 있는 그레이브 액센트로 줄바꿈이 되어있는 문장을 넣어주면
+줄바꿈까지 고려하여 텍스트로서 변수에 넣을 수있다.
+아무튼 이렇게 하고 localhost:3000/dynamic으로 들어가면 잘 뜬다.
+하지만 정적인 것과는 다르게, 웹페이지를 수정한 것을 반영하려면 서버(노드 애플리케이션)를 끄고 다시 실행해야 한다.
+물론 동적인 파일의 수정을 곧바로 반영해주는 프로그램도 있긴하다.
+
+그렇다면 다이나믹을 사용하는 이유는 무엇일까? 바로 자바스크립트를 혼용하여 쓸 수 있기 때문이다.
+만약 hello를 5번 출력하고 싶다면, 정적인 static.html 파일을 아래와 같이 만들어야한다.
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="utf-8">
+			<title></title>
+		</head>
+		<body>
+			hello, static!
+			<ul>
+				<li>hello</li>
+				<li>hello</li>
+				<li>hello</li>
+				<li>hello</li>
+				<li>hello</li>
+			</ul>
+		</body>
+	</html>
+
+하지만 동적인 웹페이지는 라우터의 내용을 아래와 같이 바꿔주면 된다.
+
+app.get('/dynamic', function(req, res){
+	var lis = '';
+	for(var i=0; i<5; i++){
+		lis = lis + '<li>hello</li>';
+	}
+	var output = `
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<meta charset="utf-8">
+				<title></title>
+			</head>
+
+			<body>
+				hello, Dynamic!
+				<ul>
+					${lis}
+				</ul>
+			</body>
+		</html>
+
+		`;
+	res.send(output);
+});
+
+저기에 ${}안에 변수 이름을 넣으면 변수를 문자열 안에 넣을 수 있다.
+추가로 아래와 같이 하면 실시간 서버시간을 띄울 수 있다.
+app.get('/dynamic', function(req, res){
+
+	var time = Date();
+	
+	var lis = '';
+	for(var i=0; i<5; i++){
+		lis = lis + '<li>hello</li>';
+	}
+	var output = `
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<meta charset="utf-8">
+				<title></title>
+			</head>
+
+			<body>
+				hello, Dynamic!
+				<ul>
+					${lis}
+				</ul>
+				${time}
+			</body>
+		</html>
+
+		`;
+	res.send(output);
+});
+
+21강 - express, 템플릿 엔진 소개
+템플릿 엔진이란? 코드를 편하게 쓸 수 있게 미리 정의된 함축적, 추상적 개념의 엔진.
+c++의 템플릿과 비슷하다. T가 아무 자료형이 될 수 있듯이, js파일에서 jade변수에 값을 넣어줄 수 있다.
+
+
+22강 - express, 템플릿 엔진 사용법
+express가 웹서버를 만들 때 좋은 패키지라면, express에 쓰기 좋은 템플릿 엔진은 Jade이다.
+express 자체에는 템플릿 엔진의 기능을 제공하지 않기 때문에, jade를 사용하면 정적과 동적의 방식을 섞어서 더 유연하게 웹앱을 만들 수 있다.
+[expressjs.com - 안내서 - express와 함께 템플리트 엔진을 사용]을 참고한다.
+cmd에 npm install jade --save를 해서 설치를 한다.
+app.set('view engine', 'jade');
+을 app.js 파일에 3번째 줄에 추가해준다. view engine이라는건 템플릿 엔진의 또다른 이름이다. 템플릿 엔진을 jade로 설정해 주겠다는 뜻이다.
+즉 우리가 만들고 있는 웹앱의 프레임워크인 express와 템플릿엔진인 jade를 연결해주겠다는 뜻이다.
+또 
+app.set('views', './views');
+를 추가해준다. 템플릿이 views 폴더안에 있다고 알려주는 코드이다. 이제 앞으로는 jade 파일을 views폴더 안에 넣으면 된다.
+이를 위해 server_side_javascript 폴더 안에 views 폴더를 만들어준다.
+이 줄이 없어도 jade를 사용하겠다고 선언하면 알아서 디폴트로 views 폴더를 참조하게 된다. 명확하게 해주기 위해 타이핑하자.
+그리고서 app.js 파일 안에 아래의 라우터를 추가한다.
+app.get('/template', function(req, res){
+	res.render('temp');
+
+});
+또 views 폴더 안에 temp.jade 파일을 만들고 내용물은 일단 html 네글자만 써준다.
+테스트를 위해 cmd에서 app.js파일을 실행시키고 웹브라우저에서 localhost:3000/template에 들어가면 일단 에러 없이 빈 웹페이지가 뜬다.
+이 때 웹페이지에서 소스보기를 하면 <html></html>이라고 뜬다.
+html이라는 것은 jade 문법이고, 이것은 html에서 <html></html>라고 번역된다.
+참고로 node app.js 라는 문구 말고 
+supervisor app.js로 실행하면, app.js 파일을 고칠때마다 껐다 켰다 할 필요가 없다.
+
+23강 - express, 템플릿 엔진, jade 문법
+참고로 html 태그를 한 태그 안에 포함시키려면 tap 키를 눌러준다.
+html
+	head
+	body
+
+소스코드를 보면 줄바꿈 없이 안 예쁘게 코드가 보인다. 이때
+google에
+jade express code pretty를 치면 방법이 나온다.
+app.js 파일에 app.locals.pretty = true;를 추가하면 된다고 한다.
+jade에서는 줄바꿈 후 첫번째 단어는 태그가 되어버린다.
+그렇기 때문에 제목 글씨로 hello jade를 띄우고 싶으면 아래와 같이 jade 파일에 넣어주어야 한다.
+html
+	head
+	body
+		h1 Hello Jade
+
+
+for문을 쓰고 싶으면-for(var i=0; i<5; i++)처럼 앞에 -표시를 해야 한다. -표시를 앞에 붙이면 jade는 이것이 화면에 출력하는 부분이 아닌, 
+자바스크립트 혹은 그 외의 문법으로 인식한다.
+저저저번 시간의 li를 5번 출력하는 것을 jade로 하면 풀 코드는 아래와 같다.
+html
+	head
+	body
+		h1 Hello Jade
+		ul
+			-for(var i=0; i<5; i++)
+				li coding
+		
+
+li역시 들여쓰기를 해야 for문에 포함이 된다.중괄호는 필요 없이 들여쓰기한 모든줄이 for문에 포함된다.
+추가로 app.js에서 jade에 변수를 대입해주려면 아래와 같이 한다.
+html
+	head
+	body
+		h1 Hello Jade
+		ul
+			-for(var i=0; i<5; i++)
+				li coding
+				li d
+		div= time
+
+div 다음에 =표시를 띄어쓰기 없이 붙여준다는 것에 주의하자.
+그리고서 app.js의 라우터를 아래와 같이 바꿔준다.
+app.get('/template', function(req, res){
+	res.render('temp', {time:'hello'});
+});
+그럼 저 중괄호 객체가 temp.jade로 흘러들어가서 time변수에 대입된다.
+'hello' 대신에 Date()를 넣으면 저저저번시간에 한것처럼 시간이 대입된다.
+
+변수를 여러개 쓰고 싶으면 라우터에 아래와 같이 추가한다.
+app.get('/template', function(req, res){
+	res.render('temp', {_time:Date(), _title:'hello'});
+
+});
+
+jade파일은 아래와 같이 수정한다.
+html
+	head
+		title= _title
+	body
+		h1 Hello Jade
+		ul
+			-for(var i=0; i<5; i++)
+				li coding
+				li d
+		div= _time
+
+최종 : 
+html
+	head
+		title= _title
+	body
+		h1 Hello Jade
+		ul
+			-for(var i=0; i<5; i++)
+				li coding
+				li d
+		div= _time
+		img(src="/hello.png")
+
+추가 문법을 알고 싶으면 구글에 jade template engine을 검색한다.
+
+24강 - express, url을 이용한 정보의 전달
+클라이언트에서 라우트로 정보를 전달할 수 있다.
+쿼리 스트링
+http://a.com/topic?id=1
+id로 2를 넘김.
+
+25강 - query 객체의 사용법
+쿼리문은 req에 담겨서 넘어온다.
+app.get('/topic', function(req, res){
+	res.send(req.query.id);
+});
+위의 라우트를 app.js에 추가하고, 
+웹브라우저에 아래의 주소를 치면 2가 뜬다.
+http://localhost:3000/topic?id=2
+query라는 객체에 id라는 프로퍼티로서 2가 넘겨져온다.
+expressjs.com 의 레퍼런스에서 더 자세히 확인할 수 있다.
+
+쿼리문으로 2가지 프로퍼티 값을 넘기고 싶다면 아래와 같이 한다.
+app.get('/topic', function(req, res){
+	res.send(req.query.id+','+req.query.name);
+});
+
+웹브라우저에 localhost:3000/topic?id=2&name=james
+라고 치면 둘 다 뜬다.
+
+26강 - query 객체의 이용
+라우터를 아래와 같이 바꾼다.
+app.get('/topic', function(req, res){
+	var topics = [
+	'first topic',
+	'second topic',
+	'third topic'
+	];
+	
+	var output = `
+		<a href="/topic?id=0">first</a><br>
+		<a href="/topic?id=1">second</a><br>
+		<a href="/topic?id=2">third</a><br>
+		${topics[req.query.id]}
+	`;
+	
+	res.send(output);
+});
+
+그다음 웹브라우저로 아래로 들어가서 테스트 해본다.
+http://localhost:3000/topic
+
+
+27강 - 시멘틱URL
+퀘리스트링 ?id=2 가 아닌, /2로 값을 넘기는 방법
+시멘틱:의미론적인.
+라우터의 첫번째 인자인 path를 다음과 같이 바꿔준다.
+'/topic/:id'
+그리고 req.query.id 대신에 req.params.id를 쓴다.
+최종 결과물은 아래와 같다.
+app.get('/topic/:id', function(req, res){
+	var topics = [
+	'first topic',
+	'second topic',
+	'third topic'
+	];
+	
+	var output = `
+		<a href="/topic/0">first</a><br>
+		<a href="/topic/1">second</a><br>
+		<a href="/topic/2">third</a><br>
+		${topics[req.params.id]}
+	`;
+	
+	res.send(output);
+});
+
+또 아래와 같이 이중 삼중으로도 할 수 있다.
+app.get('/topic/:id/:mode', function(req, res){
+	var topics = [
+	'first topic',
+	'second topic',
+	'third topic'
+	];
+	
+	var output = `
+		<a href="/topic/0">first</a><br>
+		<a href="/topic/1">second</a><br>
+		<a href="/topic/2">third</a><br>
+		${topics[req.params.id]}
+	`;
+	
+	res.send(output);
+});
+
+28강 - post 방식을 이용한 정보의 전달 1
+지금까지 했던건 get방식이었다.
+쿼리스트링이 있건, 없건,시멘틱url이건간에 모두 get방식이었다.
+get은 사용자가 서버에게 어떤 요청을 하면 응답을 하는 방식.
+post는 사용자의 정보를 서버에게 전송하는 방식
+
+29강 - post 방식을 이용한 정보의 전달 2 : form
+아래의 라우터를 app.js에 추가한다.
+app.get('/form', function(req, res){
+	res.render('form');
+});
+
+views 폴더 아래에 form.jade 파일을 만들고 아래와 같이 써준다.
+doctype html
+html
+	head
+		meta(charset='utf-8')
+	body
+		form(action='/form_receiver')
+			p
+				input(type='text' name='title')
+			p
+				textarea(name='description')
+			p
+				input(type='submit')
+
+또 라우터를 한 개 더 추가해준다.
+app.get('/form_receiver', function(req, res){
+	var title = req.query.title;
+	var description = req.query.description;
+	
+	res.send(title+' '+description);
+	
+});
+
+저렇게하면 같은 form으로 묶여있는 것들을 submit이 쿼리스트링으로 form_receiver에게 변수로 전달해준다.변수의 이름은 name으로 결정된다.
+
+form이란 태그는 url을 생성해주는 작은 프로그램이라고도 볼 수 있다.
+form을 아래와 같이 바꿔주면 명시적으로 get방식, 포스트 방식을 바꿀 수 있다.
+form(action='/form_receiver' method='post')
+form(action='/form_receiver' method='get')
+
+지금까지는 get방식이었다.
+
+
+30강 - post 방식을 이용한 정보의 전달 3 : post
+
+jade파일에서 form(action='/form_receiver' method='post')이라고 한다면
+웹페이지에서 오류가 난다.
+아래와 같은 라우터를 추가한다.
+app.post('/form_receiver', function(req, res){
+	res.send('hello, post');
+});
+
+post 방식의 라우터는 post함수를 써야한다.
+그런데post 방식에서는 req.query.id 처럼 곧바로 데이터를 콜백함수 내에서 수 없고,express에서 직접 제공하지 않고, body-parser라는 미들웨어를 npm으로 깔아야한다.
+npm install body-parser --save
+그리고나서 아래 두 줄을 app.js에 추가한다.
+
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({entended:false}));
+
+그리고서 post라우터를 아래와 같이 바꾼다.
+app.post('/form_receiver', function(req, res){
+	var title = req.body.title;
+	var description = req.body.description;
+	
+	res.send(title+' '+description);
+});
+
+바디파서가 알아서 req.body 객체를 만들어준다.
+
+31강 - post 방식을 이용한 정보의 전달 4 : get과 post 용도
+어떤 주소에 있는 정보를 친구에게 그대로 보여주고 싶다면, url을 복사해서 주는게 보통이다.
+url에 모든 정보를 담고 있으려면 query문이 드러나있는 get방식이 좋다.
+아이디와 패스워드처럼 친구가 이걸 몰라야한다면 post방식을 써야한다.
+하지만 post가 보안성이 더 높다고는 할 수 없다.
+https와 같은 다른 차원의 기술이 필요하다.
+또 쿼리문에 전송될 텍스트의 길이가 지나치게 길다면 get방식으로 보내면 규격상 모든 텍스트가 다 안넘어갈 수도 있다.
+
+32강 - node.js를 이용한 웹앱 제작 실습 - 오레인테이션
+보통은 데이터베이스에 정보를 저장하는데, 일단은 정보를 파일에 저장하는 웹앱을 만드는 실습을 해본다.
+파일저장도 간단한 방법이지만 장점이 있기 때문에 배울만한 부분이 있다.
+완벽한 웹앱이 아니므로 현실에서는 아직 쓰는것은 추천하지 않는다.
+
+
+
+33강 - node.js를 이용한 웹앱 제작 실습 - 라우팅
+사용자가 post 방식으로 정보를 서버로 보내오면, data라는 디렉토리에 파일로 저장하는 실습을 해본다.
+처음부터 한다면, 일단 npm을 해당 폴더에 설치해주어야 한다.
+cmd 창에 npm init을 써서 npm을 설치해준다.
+또, express 프레임워크와 jade 템플릿엔진을 쓸 것이므로 cmd 창에
+npm install express --save
+npm install jade --save
+를 써준다.
+
+app_file.js 파일을 하나 만들고 내용물을 아래와 같이 써준다.
+
+var express = require('express');
+var app = express();
+
+app.locals.pretty = true;
+
+app.set('view engine','jade');
+app.set('views', './views_file');
+
+app.get('/topic/new', function(req, res){
+	res.render('new');
+});
+
+app.post('/topic', function(req, res){
+	res.send('hi topic post');
+});
+
+app.listen(3000, function(){
+	console.log('connected, 3000 port');
+});
+
+그리고서 views_file폴더를 하나 만들고 그 아래에 new.jade 파일을 만들고, 내용물을 아래와 같이 써준다.
+doctype html
+html
+	head
+		meta(charset='utf8')
+	body
+		form(action='/topic' method='post')
+			p
+				input(type='text' name='title' placeholder='title')
+			p
+				textarea(name='description')
+			p
+				input(type='submit')
+
+다음시간에는 post 방식으로 넘어간 정보를 받는 것을 이어서 한다.
+
+
+
+34강 - node.js를 이용한 웹앱 제작 실습 - 본문저장
+처음부터 하는거였다면 body-parser 모듈을 설치해야한다.
+npm install --save body-parser
+그리고 app_file.js에 아래 두 줄을 추가한다.
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended:false}));
+
+현재 디렉토리에 data라는 새로운 디렉토리(폴더)를 만든다.
+그리고 데이터를 파일에 저장하기 위해 아래 줄을 추가한다.
+var fs = require('fs');
+
+그리고 라우터를 아래와 같이 수정한다.
+app.post('/topic', function(req, res){
+	var title = req.body.title;
+	var description = req.body.description;
+	fs.writeFile('data/'+title, description, function(err){
+		if(err){
+		 console.log(err);
+		 res.status(500).send('Internal Server Error');
+		}
+		res.send('success!');
+	});
+});
+
+여기서 writeFile함수는 파일 저장 함수인데, 첫번째 인자로 위치와 이름을, 두번째 인자로 내용물을, 세번째 인자로 성공여부를 알려주는 콜백함수를 넣는다.
+콜백함수에서 res.status(500)함수는 내부적으로 오류가 나면 컴퓨터에게 알려주는 함수이고, 사용자에게 internal server error 라는 문구를 넘겨준다.
+send함수의 특징은 2개 이상의 send 함수가 있다면 1번째 것 밖에 실행이 안되므로, 오류가 난다면 seccess! 문구는 뜨지 않는다.
+err를 콘솔에 띄우면 에러에 대한 상세 명세가 뜨는데, 이것은 클라이언트(사용자)에겐 보여주지 않는다. 해킹의 단서를 줄 수 있기 때문.
+
+실험을 해보고 파일이 생성됐는지 확인해보자.
+
+
+35강 - node.js를 이용한 웹앱 제작 실습 - 글목록 만들기
+topic 페이지에 접근하게 해주는 라우터를 하나 get방식으로 추가한다.
+app.get('/topic', function(req, res){
+	fs.readdir('data', function(err, files){
+		if(err){
+			console.log(err);
+			res.status(500).send('Internal Server Error!');
+		}
+		res.render('view', {topics:files});
+	});
+});
+fs.readdir 함수는 nodejs 기본 내장 모듈인 fs(파일시스템)의 멤버함수로서, 특정 폴더(디렉토리)의 파일들을 모두 읽어서 배열에 저장한다.
+그것을 view.jade에게 topics라는 이름으로 넘겨준다.
+그리고서 view_file 폴더 아래에 view.jade 파일을 만들고 아래와 같이 써준다.
+doctype html
+html
+	head
+		meta(charset='utf-8')
+	body
+		h1 Server Side Javascript
+		ul
+			each topic in topics
+				li
+					a(href='/topic/'+topic)= topic
+
+each 키워드는 jade의 용법으로, 유니티의 foreach와 비슷한 작용을 한다. 재밌는 점은 js로부터 넘겨받은 변수를 텍스트로 사용할 때는 = 표시를
+앞에 붙이고, 태그 내부에 속성으로 쓸 때는 안붙여도 된다는 점이다.
+
+36강 - node.js를 이용한 웹앱 제작 실습 - 본문읽기
+우선 아래의 라우터를 추가한다.
+app.get('/topic/:id', function(req, res){
+	var id = req.params.id;
+	
+	fs.readdir('data', function(err, files){
+		if(err){
+			console.log(err);
+			res.status(500).send('Internal Server Error!');
+		}
+		fs.readFile('data/'+id,'utf8',function(err, data){
+			if(err){
+				console.log(err);
+				res.status(500).send('Internal Server Error');
+			}
+			res.render('view', {topics:files, title:id, description:data});
+		});
+	});
+});
+
+시멘틱 url로 라우터를 만든 이유는, 파일이 늘어날 수록 라우터를 계속해서 추가할 필요가 없기 때문이다. 
+또 view.jade에 files 변수를 넘기지 않으면 에러가 나는데, 사실 변수를 넘기지 않아서 에러가 나는 것이 아닌, view.jade 파일 내의
+each 키워드가 배열의 길이를 계산할 때 정의되지 않은(넘어오지 않은) 배열의 길이를 측량할 수 없기 때문에 에러가 나는 것이다. 
+
+또 view.jade 파일을 아래와 같이 수정한다.
+doctype html
+html
+	head
+		meta(charset='utf-8')
+	body
+		h1 Server Side Javascript
+		ul
+			each topic in topics
+				li
+					a(href='/topic/'+topic)= topic
+		article
+			h2= title
+			= description
+
+최종 결과물은, localhost:3000/topic 페이지에서 링크를 누르면 밑에 그 파일의 제목과 본문이 출력된다.
+
+37강 - node.js를 이용한 웹앱 제작 실습 - 코드의 개선
+코드의 중복을 개선해보자.
+예를 들어 두 라우터의 readdir 함수가 중복된다.
+express 홈페이지에 가보면 알겠지만, 라우터의 첫번째 매개변수인 홈페이지 주소는 대괄호를 써서 배열로 가질 수 있다.
+
+topic과 topic/:id 라우터를 하나로 합치기로 하자.
+그런데 이 때 두 주소의 차이점은 id가 있으냐 없느냐이다.
+그러므로 if문으로 id가 있는지 없는지를 판단한다.
+두 라우터를 하나로 합친 라우터는 아래와 같다.
+app.get(['/topic', '/topic/:id'], function(req, res){
+	fs.readdir('data', function(err, files){
+		if(err){
+			console.log(err);
+			res.status(500).send('Internal Server Error!');
+		}
+		
+		var id = req.params.id;
+		if(id){
+			fs.readFile('data/'+id,'utf8',function(err, data){
+				if(err){
+					console.log(err);
+					res.status(500).send('Internal Server Error');
+				}
+				res.render('view', {topics:files, title:id, description:data});
+			});
+		}
+		else{
+			res.render('view', {topics:files, title:'welcome!', description:'this is javascript world!'});
+		}
+	});
+	
+});
+
+그리고 추가로 view.jade 파일을 아래와 같이 수정해준다. 이제 본문의 상단의 큰제목을 누르면 topic 홈페이지로 돌아갈 수 있다.
+
+doctype html
+html
+	head
+		meta(charset='utf-8')
+	body
+		h1 
+			a(href='/topic') Server Side Javascript
+		ul
+			each topic in topics
+				li
+					a(href='/topic/'+topic)= topic
+		article
+			h2= title
+			= description
+
+그 다음으로, /topic/new 페이지를 /topic 페이지에 합치는 것도 있지만, 굳이 하지는 않겠다.
+마지막으로 /topic/new 페이지에서 새 파일을 생성하면 지금은 success 라고 뜨는데, 그냥 그 파일에 관한 페이지를 띄우는 걸로 바꿔보자.
+/topic의 post 방식 라우터로 가서, res.send('success!'); 대신에 아래 줄을 넣어준다.
+res.redirect('/topic/'+title);
+
+38강 -팁 supervisor
+node app.js 처럼 node로 파일을 실행하면, js 파일을 수정한다면 컨트롤c를 써서 앱을 끄고 다시 실행해야 한다.
+하지만 supervisor 처럼 와치 프로그램을 사용하면, 이 프로그램이 알아서 노드를 껐다가 켠다.
+
+npmjs.com 홈페이지에 가서 supervisor를 검색하면 설명서가 뜬다.
+npm install supervisor -g
+-g는 글로벌의 약자로, 나의 웹앱에 포함되지 않고 컴퓨터 전역적으로 설치된다.
+그다음에 js파일을 킬 때 supervisor app.js 로 실행하면, 이제 끄지 않아도 수정 가능하다.
